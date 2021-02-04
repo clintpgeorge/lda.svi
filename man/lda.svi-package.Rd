@@ -6,7 +6,14 @@
 \alias{lda.svi-package}
 \title{lda.svi: Fit Latent Dirichlet Allocations Models using Stochastic Variational Inference}
 \description{
-Fits Latent Dirichlet Allocation models to text data efficiently using the algorithm introduced in Hoffman et al. (2011) <https://papers.nips.cc/paper/3902-online-learning-for-latent-dirichlet-allocation>.
+Fits Latent Dirichlet Allocation models to text data efficiently using the algorithm introduced by Hoffman et al. (2010) <https://papers.nips.cc/paper/3902-online-learning-for-latent-dirichlet-allocation>.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/nerskin/lda.svi/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Nicholas Erskine \email{nicholas.erskine95@gmail.com}
