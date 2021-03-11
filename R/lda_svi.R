@@ -31,22 +31,23 @@ lda_svi <-
            alpha = 1 / K,
            kappa = 0.7,
            tau_0 = 1024) {
+    
     if (is(dtm, "DocumentTermMatrix")) {
       if (!any(attr(dtm, 'weighting') %in% c('term frequency', 'tf'))) {
         stop('The DocumentTermMatrix object must use term frequency weighting')
       }
     }
     
-    doc_ids <- dtm$i - 1#the c++ code expects 0-indexed ids
+    doc_ids <- dtm$i - 1 # the c++ code expects 0-indexed ids
     docs <- dtm$dimnames$Docs
     
-    term_ids <- dtm$j - 1#the c++ code expect 0-indexed ids
+    term_ids <- dtm$j - 1 # the c++ code expect 0-indexed ids
     terms <- dtm$dimnames$Terms
     
     counts <- dtm$v
     
     res_list <-
-      lda_online_cpp(
+      lda_svi_cpp(
         doc_ids,
         term_ids,
         counts,
@@ -63,15 +64,15 @@ lda_svi <-
     gamma <- res_list$Gamma
     lambda <- res_list$Lambda
     
-    colnames(gamma) <- seq(1:ncol(gamma))#topic labels
+    colnames(gamma) <- seq(1:ncol(gamma)) # topic labels
     rownames(gamma) <- unique(docs)
     
     colnames(lambda) <- unique(terms)
     rownames(lambda) <- seq(1:nrow(lambda))
     
     # convert variational parameters to model parameters
-    # (this follows from equation 2 in the paper)
-    # Noting that the expectation of a Dirichlet(a) rv is a/sum(a)
+    # (this follows from Equation 2 in the paper)
+    # Note that the expectation of a Dirichlet(a) random variable is a/sum(a)
     
     theta <- gamma
     beta <- lambda
@@ -95,5 +96,5 @@ lda_svi <-
       'beta' = beta,
       'gamma' = gamma,
       'lambda' = lambda
-    )#TODO: tidy output
+    ) # TODO: tidy output
   }

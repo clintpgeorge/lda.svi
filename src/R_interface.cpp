@@ -6,7 +6,7 @@ using namespace Rcpp;
 using namespace std;
 
 // [[Rcpp::export]]
-List lda_online_cpp(
+List lda_svi_cpp(
 	IntegerVector doc_ids,
 	IntegerVector terms,
 	IntegerVector counts,
@@ -19,22 +19,20 @@ List lda_online_cpp(
 	double eta,
 	double alpha)
 {
-
 	int n = doc_ids.size();
 	unordered_map<int, unordered_map<int, int> > dtm;
 
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++){
 		dtm[doc_ids[i]][terms[i]] = counts[i];
 	}
 
-	int D = sort_unique(doc_ids).size();
-
-	int V = sort_unique(terms).size();
-
+	int D = sort_unique(doc_ids).size(); // number of documents 
+	int V = sort_unique(terms).size(); // vocabulary size 
 	LDA_State lda(D, V, K, dtm, eta, alpha);
-
 	lda.fit_model(passes, batchsize, maxiter, tau_0, kappa);
 
-	return List::create(Rcpp::Named("Lambda") = lda.lambda, Rcpp::Named("Gamma") = lda.gamma);
+	return List::create(
+	  Rcpp::Named("Lambda") = lda.lambda, 
+	  Rcpp::Named("Gamma") = lda.gamma
+	  );
 }
